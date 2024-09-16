@@ -7892,34 +7892,48 @@ Again an example of how the teams that manage to land their cars design while fi
 </div>
 </div>
 </div>
-</div>WITH lap_times_cte AS (
-    SELECT r.year, ROUND(AVG(EXTRACT(EPOCH FROM lt.lap_time::INTERVAL)/60), 3) AS avg_lap_time_minutes
-    FROM lap_times AS lt
-    INNER JOIN races r ON lt.raceId = r.raceId
-    WHERE r.year BETWEEN 2004 AND 2014
-    GROUP BY r.year
-)
---MODULARIZE AND DOCUMENT THE WHOLE AVG_LAP_TIME_THINGY
-SELECT 
-    CASE 
-        WHEN year &lt; 2009 THEN '2004-2008'
-        WHEN year = 2009 THEN '2009'
-        ELSE '2010-2014'
-    END AS year_group,
-    AVG(avg_lap_time_minutes) AS avg_lap_time_minutes
-FROM lap_times_cte
-GROUP BY 
-    CASE 
-        WHEN year &lt; 2009 THEN '2004-2008'
-        WHEN year = 2009 THEN '2009'
-        ELSE '2010-2014'
-    END
-ORDER BY 
-    CASE 
-        WHEN year_group = '2004-2008' THEN 1
-        WHEN year_group = '2009' THEN 2
-        ELSE 3
-    END;
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c76b4804-7104-4d18-9a14-80f02bfeeaf4">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">WITH</span> <span class="n">lap_times_cte</span> <span class="n">AS</span> <span class="p">(</span>
+    <span class="n">SELECT</span> <span class="n">r</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">ROUND</span><span class="p">(</span><span class="n">AVG</span><span class="p">(</span><span class="n">EXTRACT</span><span class="p">(</span><span class="n">EPOCH</span> <span class="n">FROM</span> <span class="n">lt</span><span class="o">.</span><span class="n">lap_time</span><span class="p">::</span><span class="n">INTERVAL</span><span class="p">)</span><span class="o">/</span><span class="mi">60</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span> <span class="n">AS</span> <span class="n">avg_lap_time_minutes</span>
+    <span class="n">FROM</span> <span class="n">lap_times</span> <span class="n">AS</span> <span class="n">lt</span>
+    <span class="n">INNER</span> <span class="n">JOIN</span> <span class="n">races</span> <span class="n">r</span> <span class="n">ON</span> <span class="n">lt</span><span class="o">.</span><span class="n">raceId</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">raceId</span>
+    <span class="n">WHERE</span> <span class="n">r</span><span class="o">.</span><span class="n">year</span> <span class="n">BETWEEN</span> <span class="mi">2004</span> <span class="n">AND</span> <span class="mi">2014</span>
+    <span class="n">GROUP</span> <span class="n">BY</span> <span class="n">r</span><span class="o">.</span><span class="n">year</span>
+<span class="p">)</span>
+<span class="o">--</span><span class="n">MODULARIZE</span> <span class="n">AND</span> <span class="n">DOCUMENT</span> <span class="n">THE</span> <span class="n">WHOLE</span> <span class="n">AVG_LAP_TIME_THINGY</span>
+<span class="n">SELECT</span> 
+    <span class="n">CASE</span> 
+        <span class="n">WHEN</span> <span class="n">year</span> <span class="o">&lt;</span> <span class="mi">2009</span> <span class="n">THEN</span> <span class="s1">'2004-2008'</span>
+        <span class="n">WHEN</span> <span class="n">year</span> <span class="o">=</span> <span class="mi">2009</span> <span class="n">THEN</span> <span class="s1">'2009'</span>
+        <span class="n">ELSE</span> <span class="s1">'2010-2014'</span>
+    <span class="n">END</span> <span class="n">AS</span> <span class="n">year_group</span><span class="p">,</span>
+    <span class="n">AVG</span><span class="p">(</span><span class="n">avg_lap_time_minutes</span><span class="p">)</span> <span class="n">AS</span> <span class="n">avg_lap_time_minutes</span>
+<span class="n">FROM</span> <span class="n">lap_times_cte</span>
+<span class="n">GROUP</span> <span class="n">BY</span> 
+    <span class="n">CASE</span> 
+        <span class="n">WHEN</span> <span class="n">year</span> <span class="o">&lt;</span> <span class="mi">2009</span> <span class="n">THEN</span> <span class="s1">'2004-2008'</span>
+        <span class="n">WHEN</span> <span class="n">year</span> <span class="o">=</span> <span class="mi">2009</span> <span class="n">THEN</span> <span class="s1">'2009'</span>
+        <span class="n">ELSE</span> <span class="s1">'2010-2014'</span>
+    <span class="n">END</span>
+<span class="n">ORDER</span> <span class="n">BY</span> 
+    <span class="n">CASE</span> 
+        <span class="n">WHEN</span> <span class="n">year_group</span> <span class="o">=</span> <span class="s1">'2004-2008'</span> <span class="n">THEN</span> <span class="mi">1</span>
+        <span class="n">WHEN</span> <span class="n">year_group</span> <span class="o">=</span> <span class="s1">'2009'</span> <span class="n">THEN</span> <span class="mi">2</span>
+        <span class="n">ELSE</span> <span class="mi">3</span>
+    <span class="n">END</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5ee6a3bc-4c2f-4199-81fc-1ade59c2632c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
